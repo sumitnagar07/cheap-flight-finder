@@ -1,0 +1,49 @@
+import os
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+from data_manager import DataManager
+from flight_search import FlightSearch
+from notification_manager import NotificationManager
+
+
+load_dotenv()
+
+KIWI_API_KEY = os.getenv("KIWI_API_KEY")
+MY_EMAIL = os.getenv("MY_EMAIL")
+MY_PASSWORD = os.getenv("MY_PASSWORD")
+RECIPIENT_EMAIL = "recipient.email@example.com"
+
+today = datetime.now()
+six_months_from_now = today + timedelta(days=6*30)
+
+data_manager = DataManager()
+flight_search = FlightSearch(api_key=KIWI_API_KEY)
+notification_manager = NotificationManager(my_email=MY_EMAIL, my_password=MY_PASSWORD)
+
+print("Starting Cheap Flight Finder...")
+destination_data = data_manager.get_destination_data()
+
+for city, data in destination_data.items():
+    iata_code = data["iataCode"]
+    lowest_price = data["lowestPrice"]
+    
+ 
+    flight = flight_search.get_cheapest_flight(
+        destination_iata=iata_code,
+        date_from=today.strftime("%d/%m/%Y"),
+        date_to=six_months_from_now.strftime("%d/%m/%Y")
+    )
+    
+    if flight and flight["price"] < lowest_price:
+     
+       
+        message = ()
+            f"Low price alert! Only £{flight['price']} to fly from "
+            f"{flight['origin_city']}-{flight['origin_airport']} to "
+            f"{flight['destination_city']}-{flight['destination_airport']}, "
+            f"from {flight['out_date']} to {flight['return_date']}."
+        )
+        notification_manager.send_email_alert(message_content=message, recipient_email=RECIPIENT_EMAIL)
+ 
+        data_manager.update_lowest_price(city, flight["price"])
