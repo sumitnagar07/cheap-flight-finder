@@ -1,0 +1,36 @@
+# cheap-flight-finder# data_manager.py
+
+class DataManager:
+    """
+    This class is responsible for managing the project's data,
+    including city codes and flight price records.
+    """
+    def __init__(self):
+   
+        self.destination_data = {
+            "Paris": {"iataCode": "PAR", "lowestPrice": 54},
+            "Berlin": {"iataCode": "BER", "lowestPrice": 42},
+            "Tokyo": {"iataCode": "TYO", "lowestPrice": 485},
+            "Sydney": {"iataCode": "SYD", "lowestPrice": 551},
+            "Istanbul": {"iataCode": "IST", "lowestPrice": 95},
+            "Kuala Lumpur": {"iataCode": "KUL", "lowestPrice": 414},
+            "New York": {"iataCode": "NYC", "lowestPrice": 240},
+            "San Francisco": {"iataCode": "SFO", "lowestPrice": 260},
+            "Cape Town": {"iataCode": "CPT", "lowestPrice": 378}
+        }
+
+    def get_destination_data(self):
+        """
+        Returns all the destination data.
+        """
+        return self.destination_data
+
+    def update_lowest_price(self, city_name, new_price):
+        """
+        Updates the lowest price for a given city.
+        """
+        if city_name in self.destination_data:
+            self.destination_data[city_name]["lowestPrice"] = new_price
+            print(f"Updated lowest price for {city_name} to {new_price}")
+        else:
+            print(f"City '{city_name}' not found in data.")
