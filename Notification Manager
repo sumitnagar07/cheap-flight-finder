@@ -1,0 +1,36 @@
+import smtplib
+from email.message import EmailMessage
+
+class NotificationManager:
+    """
+    This class is responsible for sending notifications,
+    including emails and SMS alerts.
+    """
+    def __init__(self, my_email, my_password):
+        self.my_email = my_email
+        self.my_password = my_password
+
+    def send_email_alert(self, message_content, recipient_email):
+        """
+        Sends an email alert with the given message content.
+        """
+        try:
+            with smtplib.SMTP("smtp.gmail.com") as connection:
+                connection.starttls()
+                connection.login(user=self.my_email, password=self.my_password)
+                msg = EmailMessage()
+                msg.set_content(message_content)
+                msg['Subject'] = "Cheap Flight Alert!"
+                msg['From'] = self.my_email
+                msg['To'] = recipient_email
+                connection.send_message(msg)
+                print("Email sent successfully!")
+        except Exception as e:
+            print(f"Error sending email: {e}")
+
+    def send_sms_alert(self, message_content):
+        """
+        Sends an SMS alert. (This is a placeholder, you need a service like Twilio).
+        """
+        print(f"SMS Alert: {message_content}")
+        # Your SMS sending logic here
